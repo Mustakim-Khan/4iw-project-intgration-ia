@@ -4,7 +4,7 @@ import Image from 'next/image'
 export default function Home(
   params, search
 ) {
-  return (
+  return (sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
     <Box>
       <Sheet>
         Home page
