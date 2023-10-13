@@ -1,10 +1,10 @@
 'use client'
 import * as React from "react"
-import { Box, Stack, Typography } from "@mui/joy"
 import Image from "next/image"
 import Link from "next/link"
 import UserMenu from "./UserMenu"
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { AspectRatio, Box, Typography } from "@mui/joy"
 
 export default function Header () {
     const router = useRouter()
@@ -32,15 +32,19 @@ export default function Header () {
             }}
         >
             <Link href="/">
-                <Typography 
+                <Typography
                     onClick={() => pathname != "/" && router.push("/")}
-                    startDecorator={<Image
-                        src="/appIcon.svg"
-                        loading="lazy"
-                        width="42"
-                        height="36"
-                        alt=""
-                    />}
+                    startDecorator={
+                        // <AspectRatio ratio='2'>
+                            <img
+                                src="/appIcon.svg"
+                                loading="lazy"
+                                width="42"
+                                height="36"
+                                alt=""
+                            />
+                        // </AspectRatio>
+                    }
                     level="h4" 
                     fontWeight="xl"
                     sx={{color: 'white', cursor:'pointer'}}
