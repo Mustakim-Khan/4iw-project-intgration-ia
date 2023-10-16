@@ -31,7 +31,6 @@ const schema = z.object({
   }),
 });
 
-
 const recipeInfoSchema = z.object({
   nom: z.string(),
   description: z.string(),
@@ -82,14 +81,14 @@ export default function Home() {
           return recipeSchema.safeParse(data);
         })
         .then((newRecipes) => {
-          setRecipes("newRecipes => ", newRecipes);
-          console.log(recipes.length);
+          setRecipes(newRecipes.data);
         })
         .catch((error) => {
           console.error(error);
         })
         .finally(() => {
           setLoading(false);
+          console.log("recipes => ", recipes);
         });
     },
     [search]
