@@ -31,7 +31,14 @@ const schema = z.object({
   }),
 });
 
-const recipeSchema = z.array(z.string());
+
+const recipeInfoSchema = z.object({
+  nom: z.string(),
+  description: z.string(),
+  image: z.string(),
+})
+
+const recipeSchema = z.array(recipeInfoSchema);
 
 const searchRoute = "/api/search";
 
@@ -64,14 +71,15 @@ export default function Home() {
           return response.json();
         })
         .then((json) => {
-          return schema.parse(json);
+          return schema.safeParse(json);
         })
         .then((data) => {
-          return JSON.parse(data.message.content);
+          console.log("json => ", data.data);
+          return JSON.parse(data.data.message.content);
         })
         .then((data) => {
           console.log("data => ", data);
-          return recipeSchema.parse(data);
+          return recipeSchema.safeParse(data);
         })
         .then((newRecipes) => {
           setRecipes("newRecipes => ", newRecipes);
