@@ -34,7 +34,7 @@ const schema = z.object({
 const recipeInfoSchema = z.object({
   nom: z.string(),
   description: z.string(),
-  image: z.string(),
+  temps: z.string(),
 })
 
 const recipeSchema = z.array(recipeInfoSchema);
@@ -53,7 +53,6 @@ export default function Home() {
   const getSearchResults = React.useCallback(
     (event) => {
       event.preventDefault();
-      console.log("Search => ", search);
       setLoading(true);
       setRecipes([]);
       setSearch("");
@@ -73,11 +72,9 @@ export default function Home() {
           return schema.safeParse(json);
         })
         .then((data) => {
-          console.log("json => ", data.data);
           return JSON.parse(data.data.message.content);
         })
         .then((data) => {
-          console.log("data => ", data);
           return recipeSchema.safeParse(data);
         })
         .then((newRecipes) => {
@@ -88,7 +85,6 @@ export default function Home() {
         })
         .finally(() => {
           setLoading(false);
-          console.log("recipes => ", recipes);
         });
     },
     [search]
@@ -122,9 +118,13 @@ export default function Home() {
             justifyContent="space-around"
             alignItems=""
           >
-            {Array.from(Array(14)).map((_, index) => (
+            {recipes.map((recipe, index) => (
               <Grid key={index}>
-                <RecipeCard />
+                <RecipeCard
+                  nom={recipe.nom}
+                  description={recipe.description}
+                  temps={recipe.temps}
+                />
               </Grid>
             ))}
           </Grid>
