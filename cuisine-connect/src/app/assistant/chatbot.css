@@ -42,7 +42,8 @@
     position: relative;
   }
   .chatbot .chat-header .chat-admin {
-    background: linear-gradient(135deg, rgb(10, 14, 136) 0%, rgb(0, 177, 206) 100%);
+    background: linear-gradient(135deg, rgb(0, 0, 0) 0%, rgb(165, 165, 165) 100%);
+    color: #ffffff;
     padding: 24px;
     display: flex;
     align-items: center;
@@ -91,7 +92,8 @@
     align-items: center;
     gap: 10px;
     padding: 14px 28px 20px;
-    background: linear-gradient(135deg, rgb(10, 14, 136) 0%, rgb(0, 177, 206) 100%);
+    color: #ffffff;
+    background: linear-gradient(135deg, rgb(0, 0, 0) 0%, rgb(165, 165, 165) 100%);
   }
   .chatbot .chat-header .chat-welcome span {
     display: block;
@@ -152,7 +154,7 @@
     padding: 10px 16px;
     border-radius: 20px;
     margin: 2px 0px;
-    background: linear-gradient(135deg, rgb(0, 72, 234), rgb(28, 226, 255));
+    background: linear-gradient(135deg, rgb(0, 0, 0), rgb(165, 165, 165));
     color: #fff;
     font-weight: 500;
     border-radius: 20px;
@@ -174,6 +176,7 @@
     color: rgb(6, 19, 43);
     font-weight: 500;
     font-size: 18px;
+    margin-bottom: 20px;
   }
   .chatbot .chat-footer .chat-input input::-moz-placeholder {
     color: #93989c;
@@ -285,10 +288,10 @@
     transition: 0.3s ease;
   }
   .chatbot .chat-footer .chat-emoji div button:hover {
-    background: rgba(14, 148, 244, 0.525);
+    background: rgba(0, 0, 0, 0.525);
   }
   .chatbot .chat-footer .chat-emoji div button:hover svg {
-    fill: rgb(14, 149, 244);
+    fill: rgb(0, 0, 0);
     stroke: #fff;
   }
   .chatbot .chat-footer .chat-emoji span {
@@ -327,7 +330,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: linear-gradient(135deg, rgb(0, 72, 234), rgb(28, 226, 255));
+    background: linear-gradient(135deg, rgb(0, 0, 0), rgb(165, 165, 165));
     box-shadow: rgba(2, 6, 16, 0.2) 0px 2px 16px;
   }
   .chatbot .init-button svg {

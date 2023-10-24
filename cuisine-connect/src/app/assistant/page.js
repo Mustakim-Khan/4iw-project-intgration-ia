@@ -27,7 +27,6 @@ export default function AssistantChat() {
     const initButtonOpen = document.querySelector(".init-button__open");
     const btnArrow = document.querySelector(".chat-admin-options .btn-arrow");
     const chat = document.querySelector(".chat");
-    const initText = document.querySelector(".init-text");
     const chatBody = document.querySelector(".chat-body");
     const chatInput = document.querySelector(".chat-input input");
 
@@ -40,39 +39,37 @@ export default function AssistantChat() {
       chatBodyScroll();
       initButtonClose.style.transform = "translateX(-50%)";
       initButtonOpen.style.transform = "translateX(-50%)";
-      initText.style.display = "none";
-      chat.classNameList.add("show");
+      chat.classList.add("show");
     });
 
     btnArrow.addEventListener("click", () => {
       initButtonClose.style.transform = "translateX(50%)";
       initButtonOpen.style.transform = "translateX(50%)";
-      initText.style.display = "flex";
-      chat.classNameList.remove("show");
+      chat.classList.remove("show");
     });
 
     initButtonOpen.addEventListener("click", () => {
       if (chatInput.value == "") {
-        chatInput.classNameList.add("wrong");
+        chatInput.classList.add("wrong");
         setTimeout(() => {
-          chatInput.classNameList.remove("wrong");
+          chatInput.classList.remove("wrong");
         }, 1000);
       } else {
         const newSend = document.createElement("div");
-        newSend.classNameList.add("send");
+        newSend.classList.add("send");
         newSend.innerText = chatInput.value;
         chatBody.appendChild(newSend);
         chatBodyScroll();
 
         const writeReceive = document.createElement("div");
-        writeReceive.classNameList.add("receive");
-        writeReceive.classNameList.add("write");
+        writeReceive.classList.add("receive");
+        writeReceive.classList.add("write");
         writeReceive.innerText = "Ecrit ...";
         chatBody.appendChild(writeReceive);
         chatBodyScroll();
 
         const newReceive = document.createElement("div");
-        newReceive.classNameList.add("receive");
+        newReceive.classList.add("receive");
         newReceive.innerHTML =
           "Je comprends pas ce que tu dis ... Tu peux visiter mon portfolio <a href='https://lndev.me'>https://lndev.me</a>";
 
@@ -98,28 +95,14 @@ export default function AssistantChat() {
             <img src="./assets/img/LN.png" alt="ln" />
             <div className="chat-admin-text">
               <h3>Discuter avec</h3>
-              <h2>LN Dev</h2>
+              <h2>ChatBot</h2>
             </div>
             <div className="chat-admin-options">
-              <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.5 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm0 6a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
               <button className="btn-arrow">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
-                  fill="currentColor"
+                  fill="#ffffff"
                   className="w-6 h-6"
                 >
                   <path
@@ -159,55 +142,15 @@ export default function AssistantChat() {
           <div className="chat-input">
             <input type="text" placeholder="Ecrivez votre message ..." />
           </div>
-          <div className="chat-emoji">
-            <div>
-              <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="#93989c"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"
-                  />
-                </svg>
-              </button>
-              <button>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="#93989c"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"
-                  />
-                </svg>
-              </button>
-            </div>
-            <span>Coded by <a href="https://lndev.me">LN</a></span>
-          </div>
         </div>
       </div>
       <div className="init">
-        <button className="init-text">
-          <span>Chattez avec LN 👋</span>
-        </button>
         <div className="init-button">
           <div className="init-button__close">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              fill="currentColor"
+              fill="#ffffff"
               className="w-6 h-6"
             >
               <path
@@ -220,7 +163,7 @@ export default function AssistantChat() {
               ><svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                fill="rgba(14,149,244,1)"
+                fill="rgba(88,88,88,1)"
                 className="w-6 h-6"
               >
                 <path
@@ -244,7 +187,7 @@ export default function AssistantChat() {
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
-                fill="rgba(14,149,244,1)"
+                fill="rgba(88,88,88,1)"
                 className="w-6 h-6"
               >
                 <path
