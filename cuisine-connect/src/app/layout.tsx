@@ -3,6 +3,7 @@ import { Box, Sheet } from '@mui/joy'
 import Header from './components/Header'
 import './globals.css'
 import { Inter } from 'next/font/google'
+import './assistant/chatbot.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
