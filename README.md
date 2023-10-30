@@ -20,3 +20,6 @@ make next_secret
 ```bash
 make bash
 ```
+
+## Ressources
+- [Prisma/postgres](https://www.prisma.io/docs/concepts/database-connectors/postgresql)
