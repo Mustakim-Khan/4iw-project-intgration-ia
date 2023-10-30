@@ -9,3 +9,6 @@ install:
 
 dev: install
 	docker compose exec nodejs npm run dev
+
+next_secret:
+	openssl rand -base64 32

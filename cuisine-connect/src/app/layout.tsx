@@ -1,8 +1,9 @@
 import * as React from 'react'
+import './globals.css'
 import { Box, Sheet } from '@mui/joy'
 import Header from './components/Header'
-import './globals.css'
 import { Inter } from 'next/font/google'
+import AuthProvider from './components/providers/AuthProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,21 +16,23 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className} suppressHydrationWarning={true}>
-        <nav><Header /></nav>
-        <main>
-          <Box
-            sx={{
-              bgcolor: 'white',
-              // display: 'grid',
-              gridTemplateRows: '52px 0px 1fr',
-              minHeight: '110dvh',
-            }}
-          >
-            <Sheet>
-              {children}
-            </Sheet>
-          </Box>
-        </main>
+        <AuthProvider>
+          <nav><Header /></nav>
+          <main>
+            <Box
+              sx={{
+                bgcolor: 'white',
+                // display: 'grid',
+                gridTemplateRows: '52px 0px 1fr',
+                minHeight: '110dvh',
+              }}
+            >
+              <Sheet>
+                  {children}
+              </Sheet>
+            </Box>
+          </main>
+        </AuthProvider>
       </body>
     </html>
   )

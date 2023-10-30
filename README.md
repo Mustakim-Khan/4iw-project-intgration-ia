@@ -11,3 +11,7 @@ make dev
 ```bash
 make down
 ```
+# Generate Next auth secret
+```bash
+make next_secret
+```
