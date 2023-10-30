@@ -12,3 +12,6 @@ dev: install
 
 next_secret:
 	openssl rand -base64 32
+
+bash:
+	docker compose exec nodejs /bin/sh

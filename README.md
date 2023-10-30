@@ -15,3 +15,8 @@ make down
 ```bash
 make next_secret
 ```
+
+# Node Server bash
+```bash
+make bash
+```
