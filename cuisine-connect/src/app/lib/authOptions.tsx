@@ -14,9 +14,6 @@ const authOptions : NextAuthOptions = {
       GoogleProvider({
         clientId: process.env.GOOGLE_CLIENT_ID as string,
         clientSecret:  process.env.GOOGLE_CLIENT_SECRET as string,
-        // https://next-auth.js.org/providers/google#example
-        // force the Refresh Token to always be provided on sign in, however this will ask all users to confirm 
-        //  if they wish to grant your application access every time they sign in.
         authorization: {
           params: {
             prompt: "consent",
@@ -29,11 +26,10 @@ const authOptions : NextAuthOptions = {
     ],
     callbacks: {
       signIn: async ({ user, account, profile }: any ) => {
-        // if (account.provider === "google") {
-        //   return profile.email_verified && profile.email.endsWith("gmail.com")
-        // }
-        // return false
-        user.name = user.email.slice(0, user.email.indexOf('@'))
+        // user.name = user.email.slice(0, user.email.indexOf('@'))
+        if (account.provider === "google") {
+          return profile.email_verified && profile.email.endsWith("gmail.com")
+        }
         return true
       },
       redirect: async ({ url, baseUrl }: any) => {

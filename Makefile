@@ -2,7 +2,7 @@ up:
 	docker compose up -d
 
 down:
-	docker compose down
+	docker compose down -v
 
 install:
 	docker compose exec nodejs npm install

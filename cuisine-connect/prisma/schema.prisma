@@ -37,9 +37,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
+  id                        String    @id @default(cuid())
+  name                      String?
+  email                     String?   @unique
+  allergy                   String[]
+  medicalContraindications  String[]
+  ratings                   Rating[]      // Relation avec les notes (User peut noter plusieurs Recipe)
+  comments                  Comment[]     // Relation avec les commentaires (User peut commenter plusieurs Recipe)
+  
   emailVerified DateTime?
   image         String?
   accounts      Account[]
@@ -52,4 +57,34 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Recipe {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  ingredients String[]
+  keywords    String[]
+  ratings     Rating[]    // Relation avec les notes (Recipe peut avoir plusieurs notes d'utilisateurs différents)
+  comments    Comment[]   // Relation avec les commentaires (Recipe peut avoir plusieurs commentaires d'utilisateurs différents)
+}
+
+model Rating {
+  id     String  @id @default(cuid())
+  value  Int
+  userId String   
+  recipeId String
+  owner User @relation(fields: [userId], references: [id])
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+  
+  @@unique([userId, recipeId])
+}
+
+model Comment {
+  id            String    @id @default(cuid())
+  comment       String
+  userId        String
+  recipeId      String
+  owner     User @relation(fields: [userId], references: [id])
+  recipe    Recipe @relation(fields: [recipeId], references: [id])
 }
