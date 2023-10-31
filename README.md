@@ -1,3 +1,6 @@
+## Requirement :
+Create `cuisine-connect/.env` and add `DATABASE_URL`
+
 # Lancement projet
 
 ```bash
