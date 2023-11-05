@@ -3,8 +3,7 @@ import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { PrismaClient } from "@prisma/client"
 
-
-const prisma = new PrismaClient()
+export const prisma = new PrismaClient()
 
 const authOptions : NextAuthOptions = {
     adapter: PrismaAdapter(prisma),
@@ -28,30 +27,23 @@ const authOptions : NextAuthOptions = {
       signIn: async ({ user, account, profile }: any ) => {
         // user.name = user.email.slice(0, user.email.indexOf('@'))
         if (account.provider === "google") {
-          return profile.email_verified && profile.email.endsWith("gmail.com")
+          if (profile.email_verified && profile.email.endsWith("@gmail.com")) {
+            return user
+          }
         }
-        return true
+        return null
       },
       redirect: async ({ url, baseUrl }: any) => {
         // Allows relative callback URLs
-        // if (url.startsWith("/")) return `${baseUrl}${url}`
-        // // Allows callback URLs on the same origin
-        // else if (new URL(url).origin === baseUrl) return url
+        if (url.startsWith("/")) return `${baseUrl}${url}`
+        // Allows callback URLs on the same origin
+        else if (new URL(url).origin === baseUrl) return url
         return baseUrl
       },
       session: async ({ session, token } :any) => {
-        console.log("TOKEN => ", token);
-        console.log("SESSION => ", session);
-        session.accessToken = token.accessToken
         return session;
       },
       jwt: async ({ user, token, account } : any) => {
-        if (user) {
-          token.user = user
-        }
-        if (account) {
-          token.account = account
-        }
         return token
       },
     },
