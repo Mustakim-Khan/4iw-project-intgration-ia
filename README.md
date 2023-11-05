@@ -34,3 +34,4 @@ make dpm
 
 ## Ressources
 - [Prisma/postgres](https://www.prisma.io/docs/concepts/database-connectors/postgresql)
+- [Prisma/NextJs](https://www.prisma.io/nextjs)
