@@ -8,6 +8,7 @@ import { LogIn, LogOut, User} from 'react-feather';
 
 
 export default function ControlledDropdown() {
+  const router = useRouter()
   const { data : session } = useSession()
   const [open, setOpen] = React.useState(false);
 
@@ -22,7 +23,7 @@ export default function ControlledDropdown() {
       <Menu placement="bottom-end">
         { (session?.user) ? 
           (<>
-            <MenuItem onClick={() => alert('My Account')}>
+            <MenuItem onClick={() => router.push('users/me')}>
               <ListItemDecorator> <User/> </ListItemDecorator>{' '}
                 My account
             </MenuItem>
