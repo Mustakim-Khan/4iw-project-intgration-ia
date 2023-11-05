@@ -1,12 +1,15 @@
-## Requirement :
-Create `cuisine-connect/.env` and add `DATABASE_URL`
+# Requirement :
+- Create `cuisine-connect/.env`
+- Create `cuisine-connect/.env.local`
+- [Google sso configuration](https://shorturl.at/mpCV6)
+    - Authorized URL            : `http://localhost:3000`
+    - Authorized redirect URL   : `http://localhost:3000/api/auth/callback/google`
 
 # Lancement projet
 
 ```bash
 make up
-```
-```bash
+make dpm
 make dev
 ```
 
@@ -19,9 +22,14 @@ make down
 make next_secret
 ```
 
-# Node Server bash
+# Run Command in server
 ```bash
 make bash
+```
+
+# Generate Prisma Migration
+```bash
+make dpm
 ```
 
 ## Ressources

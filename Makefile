@@ -15,3 +15,6 @@ next_secret:
 
 bash:
 	docker compose exec nodejs /bin/sh
+
+dpm:
+	docker compose exec nodejs npx prisma migrate dev
