@@ -9,6 +9,8 @@ import {
   CardContent,
   CardOverflow,
   Link,
+  CardActions,
+  Button,
 } from "@mui/joy";
 import { Heart } from "react-feather";
 
@@ -36,7 +38,7 @@ export default function RecipeCard({ nom, description, temps }) {
       </CardOverflow>
       <CardContent>
         <Typography level="title-md">
-          <Link href="#" overlay underline="none">
+          <Link href={`/recipes/${ nom }`} overlay underline="none">
             {nom}
           </Link>
         </Typography>
