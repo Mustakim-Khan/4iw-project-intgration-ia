@@ -6,8 +6,7 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 export default function AssistantChat() {
   const [search, setSearch] = React.useState("");
 
-  const callAssistant = async (e) => {
-    e.preventDefault();
+  const callAssistant = async () => {
     const response = await fetch("/api/assistant", {
         method: "POST",
         headers: {
@@ -19,73 +18,75 @@ export default function AssistantChat() {
     });
 
     const json = await response.json();
-    console.log(json);
+  
+    return json;
   }
 
-  React.useEffect(() => {
+  const chatBodyScroll = () => {
+    const chatBody = document.querySelector(".chat-body");
+    chatBody.scrollTop = chatBody.scrollHeight;
+  };
+
+  const clickBtnClose = (e) => {
     const initButtonClose = document.querySelector(".init-button__close");
     const initButtonOpen = document.querySelector(".init-button__open");
-    const btnArrow = document.querySelector(".chat-admin-options .btn-arrow");
     const chat = document.querySelector(".chat");
+
+    chatBodyScroll();
+    initButtonClose.style.transform = "translateX(-50%)";
+    initButtonOpen.style.transform = "translateX(-50%)";
+    chat.classList.add("show");
+  }
+
+  const clickBtnOpen = async (e) => {
     const chatBody = document.querySelector(".chat-body");
     const chatInput = document.querySelector(".chat-input input");
 
-
-    const chatBodyScroll = () => {
-      chatBody.scrollTop = chatBody.scrollHeight;
-    };
-
-    initButtonClose.addEventListener("click", () => {
+    if (chatInput.value == "") {
+      chatInput.classList.add("wrong");
+      setTimeout(() => {
+        chatInput.classList.remove("wrong");
+      }, 1000);
+    } else {
+      const newSend = document.createElement("div");
+      newSend.classList.add("send");
+      newSend.innerText = chatInput.value;
+      chatBody.appendChild(newSend);
       chatBodyScroll();
-      initButtonClose.style.transform = "translateX(-50%)";
-      initButtonOpen.style.transform = "translateX(-50%)";
-      chat.classList.add("show");
-    });
 
-    btnArrow.addEventListener("click", () => {
+      const writeReceive = document.createElement("div");
+      writeReceive.classList.add("receive");
+      writeReceive.classList.add("write");
+      writeReceive.innerText = "Ecrit ...";
+      chatBody.appendChild(writeReceive);
+      chatBodyScroll();
+
+      const responseAssistant = await callAssistant();
+      const newReceive = document.createElement("div");
+      newReceive.classList.add("receive");
+      newReceive.innerHTML = responseAssistant.result.content;
+
+      setTimeout(() => {
+        chatBody.appendChild(newReceive);
+        chatBodyScroll();
+        chatBody.removeChild(writeReceive);
+        chatBodyScroll();
+      }, 1500);
+
+      chatInput.value = "";
+    }
+  }
+
+  const clickBtnArrow = (e) => {
+    const initButtonClose = document.querySelector(".init-button__close");
+    const initButtonOpen = document.querySelector(".init-button__open");
+    const chat = document.querySelector(".chat");
+
+
       initButtonClose.style.transform = "translateX(50%)";
       initButtonOpen.style.transform = "translateX(50%)";
       chat.classList.remove("show");
-    });
-
-    initButtonOpen.addEventListener("click", () => {
-      if (chatInput.value == "") {
-        chatInput.classList.add("wrong");
-        setTimeout(() => {
-          chatInput.classList.remove("wrong");
-        }, 1000);
-      } else {
-        const newSend = document.createElement("div");
-        newSend.classList.add("send");
-        newSend.innerText = chatInput.value;
-        chatBody.appendChild(newSend);
-        chatBodyScroll();
-
-        const writeReceive = document.createElement("div");
-        writeReceive.classList.add("receive");
-        writeReceive.classList.add("write");
-        writeReceive.innerText = "Ecrit ...";
-        chatBody.appendChild(writeReceive);
-        chatBodyScroll();
-
-        const newReceive = document.createElement("div");
-        newReceive.classList.add("receive");
-        newReceive.innerHTML =
-          "Je comprends pas ce que tu dis ... Tu peux visiter mon portfolio <a href='https://lndev.me'>https://lndev.me</a>";
-
-        setTimeout(() => {
-          chatBody.appendChild(newReceive);
-          chatBodyScroll();
-          chatBody.removeChild(writeReceive);
-          chatBodyScroll();
-        }, 1500);
-
-        chatInput.value = "";
-      }
-    });
-  }, []);
-
-
+  }
 
   return (
     <div className="chatbot">
@@ -98,7 +99,7 @@ export default function AssistantChat() {
               <h2>ChatBot</h2>
             </div>
             <div className="chat-admin-options">
-              <button className="btn-arrow">
+              <button onClick={clickBtnArrow} className="btn-arrow">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -123,30 +124,17 @@ export default function AssistantChat() {
           <img className="chat-wave" src="/assets/img/wave.svg" alt="wave" />
         </div>
         <div className="chat-body">
-          <div className="send">
-            Yo LN, tu as pu realiser le challenge de Benjamin code ?
-          </div>
-          <div className="receive">Yes bien sur :)</div>
-          <div className="send">Comment tu l'as trouvé ?</div>
-          <div className="receive">Tres chouette c'etait cooool ...</div>
-          <div className="send">Bon courage pour la suite !</div>
-          <div className="receive">Merci, C'est gentil :)</div>
-          <div className="receive">
-            J'espere que tu assistera a mon speech sur tailwind pendant l'
-            Asynconf 2022
-          </div>
-          <div className="send">Ouii normalement !</div>
-          <div className="receive">Ok nice, Ciao.</div>
+          <div className="receive">Bonjour, que puis-je faire pour vous ?</div>
         </div>
         <div className="chat-footer">
           <div className="chat-input">
-            <input type="text" placeholder="Ecrivez votre message ..." />
+            <input value={search} onChange={e => setSearch(e.target.value)} type="text" placeholder="Ecrivez votre message ..." />
           </div>
         </div>
       </div>
       <div className="init">
         <div className="init-button">
-          <div className="init-button__close">
+          <div onClick={clickBtnClose} className="init-button__close">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
@@ -172,7 +160,7 @@ export default function AssistantChat() {
               </svg>
             </span>
           </div>
-          <div className="init-button__open">
+          <div onClick={clickBtnOpen} className="init-button__open">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
