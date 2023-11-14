@@ -1,5 +1,12 @@
 "use client";
-import { Box, Sheet } from "@mui/joy";
+import {
+  Box,
+  CircularProgress,
+  List,
+  ListItem,
+  Sheet,
+  Typography,
+} from "@mui/joy";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { set } from "zod";
@@ -11,16 +18,19 @@ export default function ReceipDetails({
 }) {
   const detailsRoute = "/api/details";
 
-  const recipeName = params.slug;
-  const [details, setDetails] = useState(null);
-  const [instructions, setInstructions] = useState(null);
+  const recipeName = params.slug.replace(/-/g, " ");
+  const [ingredients, setIngredients] = useState([]);
+  const [steps, setSteps] = useState([]);
+  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [content, setContent] = useState(null);
+
   useEffect(() => {
-    console.log("ReceipDetails useEffect");
     setLoading(true);
-    setDetails(null);
-    setInstructions(null);
+    setIngredients(null);
+    setSteps(null);
+    setDescription(null);
     const getData = async () => {
       const response = await fetch(detailsRoute, {
         method: "POST",
@@ -31,14 +41,11 @@ export default function ReceipDetails({
           search: recipeName,
         }),
       });
-      console.log("response", response);
       const data = await response.json();
-      console.log("data", data);
-      // setDetails(data);
-      // const response2 = await fetch(`/api/recipes/${name}/instructions`);
-      // const data2 = await response2.json();
-      // setInstructions(data2);
-      // setLoading(false);
+      setDescription(data.description.content);
+      setIngredients(JSON.parse(data.recipe.content).ingredients);
+      setSteps(JSON.parse(data.recipe.content).steps);
+      setLoading(false);
     };
     const response = getData()
       .then((response) => response)
@@ -49,10 +56,43 @@ export default function ReceipDetails({
 
   return (
     <Box>
-      <Sheet>
-        Receipe Page : {recipeName} <br />
-        Receipt Details
+      <Sheet className="container mx-auto">
+        <Typography level="h1">{recipeName}</Typography>
+        {loading ? (
+          <Box>
+            <Typography textAlign="center">
+              <CircularProgress />
+            </Typography>
+          </Box>
+        ) : (
+          <div>
+            <Typography level="body-md" className="mt-2 mb-4">
+              {description}
+            </Typography>
+            <div className="mb-6">
+              <Typography level="h3">Ingrédients requis :</Typography>
+              <List>
+                {ingredients.map((ingredient) => (
+                  <ListItem>{ingredient}</ListItem>
+                ))}
+              </List>
+            </div>
+            <div>
+              <List>
+                <Typography level="h3">Étapes :</Typography>
+                {steps.map((step) => (
+                  <ListItem>{step}</ListItem>
+                ))}
+              </List>
+            </div>
+          </div>
+        )}
       </Sheet>
     </Box>
   );
+}
+{
+  /* <div>{description}</div>
+            <div>{ingredients}</div>
+            <div>{steps}</div> */
 }

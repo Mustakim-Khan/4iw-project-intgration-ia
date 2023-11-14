@@ -15,23 +15,42 @@ export async function POST(request: Request) {
     apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY,
   });
 
-  const systemContent = "Tu es un cuistot de grande renommé.\
+  const systemContent =
+    "Tu es un cuistot de grande renommé.\
 Ton job est de répondre aux questions de cuisine qui te sont posées.\
-À partir de maintenant, dès que tu recevras un nom de recette,\
-tu renverras un tableau JSON de chaînes de caractères dans lequel tu renverra une description détaillée de la recette, et une liste d'instructions détaillé pour réaliser ce plat.\
-Tu ne dois rien renvoyer d'autre que du JSON, pas de texte avant ou après pas de bonjour ni rien du tout d'autre que du JSON et le tableau ne doit pas être inclu dans aucune propriété, seulement un tableau tout simple de string.\
-Le résultat final doit être sous cette forme zod :\
-const schema = z.object({message: z.object({role: z.string(),content: z.string()})});\
-La description de la recette doit être dans la clé json 'description' et la valeur doit être une longue phrase.\
-La liste d'instructions de la recette doit être dans une clé json 'instructions' et doit être un tableau sous format json.\
-Donne le résultat de la recherche sous forme d'un tableau de string sans clé pour le premier object.";
+Tu ne dois rien renvoyer d'autre que le type de résultat demandé, pas de texte avant ou après, pas de bonjour ni rien d'autre que le résultat demandé.";
 
-  const completions = await openai.chat.completions.create({
+  const descSystemContent =
+    "Donne le résultat de la recherche sous forme d'un string.\
+Dès que tu recevras un nom de recette, donne moi une longue description de cette recette, rien de plus que la description.";
+
+  const recipeSystemContent =
+    "Donne le résultat de la recherche sous forme JSON, pas un string.\
+Dès que tu recevras un nom de recette, dis moi comment cuisiner cette recette, rien de plus. J'ai besoin de savoir quels produits j'ai besoin et les quantités pour chaque ingrédients pour une personne. Ainsi que les étapes à suivre.\
+Le résultat doit contenir que les ingrédients et les étapes, rien d'autre.\
+Les ingrédients doivent être dans la clé JSON 'ingredients', elle sera un tableau JSON de string.\
+Et les étapes seront dans la clé 'steps', elle sera un tableau JSON de string.";
+
+  const descCompletions = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
       {
         role: "system",
-        content: systemContent,
+        content: systemContent + descSystemContent,
+      },
+      {
+        role: "user",
+        content: search,
+      },
+    ],
+  });
+
+  const recipeCompletions = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    messages: [
+      {
+        role: "system",
+        content: systemContent + recipeSystemContent,
       },
       {
         role: "user",
@@ -41,6 +60,7 @@ Donne le résultat de la recherche sous forme d'un tableau de string sans clé p
   });
 
   return NextResponse.json({
-    message: completions.choices[0].message as unknown as string,
+    description: descCompletions.choices[0].message as unknown as string,
+    recipe: recipeCompletions.choices[0].message as unknown as string,
   });
 }
