@@ -9,10 +9,13 @@ import {
   CardContent,
   CardOverflow,
   Link,
+  CardActions,
+  Button,
 } from "@mui/joy";
 import { Heart } from "react-feather";
 
 export default function RecipeCard({ nom, description, temps }) {
+  const nameUrl = nom.replace(/ /g, "-").toLowerCase();
   return (
     <Card variant="outlined" sx={{ width: 350 }}>
       <CardOverflow>
@@ -36,7 +39,7 @@ export default function RecipeCard({ nom, description, temps }) {
       </CardOverflow>
       <CardContent>
         <Typography level="title-md">
-          <Link href="#" overlay underline="none">
+          <Link href={`/recipes/${ nameUrl }`} overlay underline="none">
             {nom}
           </Link>
         </Typography>
