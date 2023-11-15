@@ -6,7 +6,7 @@ import { Inter } from 'next/font/google'
 import AuthProvider from './components/providers/AuthProvider'
 import { getServerSession } from 'next-auth'
 import authOptions from './lib/authOptions'
-import './assistant/chatbot.css'
+import './assistant/chatbot.css' 
 
 const inter = Inter({ subsets: ['latin'] })
 
