@@ -16,7 +16,7 @@ export default function Header () {
             className="Header"
             sx={{
                 p: 2,
-                gap: 2,
+                // gap: 2,
                 bgcolor: 'black',
                 display: 'flex',
                 flexDirection: 'row',
@@ -26,6 +26,7 @@ export default function Header () {
                 borderBottom: '1px solid',
                 borderColor: 'divider',
                 // position: 'sticky',
+                // mb:10,
                 top: 0,
                 zIndex: 1100,
                 boxShadow: 'sm',
