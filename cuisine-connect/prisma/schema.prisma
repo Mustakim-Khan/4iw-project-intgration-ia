@@ -1,0 +1,90 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+//   shadowDatabaseUrl = env("SHADOW_DATABASE_URL") // Only needed when using a cloud provider that doesn't support the creation of new databases, like Heroku. Learn more: https://pris.ly/d/migrate-shadow
+}
+
+generator client {
+  provider        = "prisma-client-js"
+//   previewFeatures = ["referentialActions"] // You won't need this in Prisma 3.X or higher.
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id                        String    @id @default(cuid())
+  name                      String?
+  email                     String?   @unique
+  allergy                   String[]
+  medicalContraindications  String[]
+  ratings                   Rating[]      // Relation avec les notes (User peut noter plusieurs Recipe)
+  comments                  Comment[]     // Relation avec les commentaires (User peut commenter plusieurs Recipe)
+  
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Recipe {
+  id          String  @id @default(cuid())
+  title       String
+  description String
+  ingredients String[]
+  keywords    String[]
+  ratings     Rating[]    // Relation avec les notes (Recipe peut avoir plusieurs notes d'utilisateurs différents)
+  comments    Comment[]   // Relation avec les commentaires (Recipe peut avoir plusieurs commentaires d'utilisateurs différents)
+}
+
+model Rating {
+  id     String  @id @default(cuid())
+  value  Int
+  userId String   
+  recipeId String
+  owner User @relation(fields: [userId], references: [id])
+  recipe Recipe @relation(fields: [recipeId], references: [id])
+  
+  @@unique([userId, recipeId])
+}
+
+model Comment {
+  id            String    @id @default(cuid())
+  comment       String
+  userId        String
+  recipeId      String
+  owner     User @relation(fields: [userId], references: [id])
+  recipe    Recipe @relation(fields: [recipeId], references: [id])
+}

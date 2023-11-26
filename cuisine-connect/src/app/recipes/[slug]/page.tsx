@@ -72,8 +72,8 @@ export default function ReceipDetails({
             <div className="mb-6">
               <Typography level="h3">Ingrédients requis :</Typography>
               <List>
-                {ingredients.map((ingredient) => (
-                  <ListItem>{ingredient}</ListItem>
+                {ingredients.map((ingredient,index) => (
+                  <ListItem key={index}>{ingredient}</ListItem>
                 ))}
               </List>
             </div>
