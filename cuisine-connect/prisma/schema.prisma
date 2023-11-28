@@ -65,6 +65,10 @@ model Recipe {
   description String
   ingredients String[]
   keywords    String[]
+  time        String
+  nutriScore  String
+  nutriments  Json
+  steps       String[]
   ratings     Rating[]    // Relation avec les notes (Recipe peut avoir plusieurs notes d'utilisateurs différents)
   comments    Comment[]   // Relation avec les commentaires (Recipe peut avoir plusieurs commentaires d'utilisateurs différents)
 }

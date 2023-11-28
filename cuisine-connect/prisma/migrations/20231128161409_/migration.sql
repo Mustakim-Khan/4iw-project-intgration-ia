@@ -53,6 +53,10 @@ CREATE TABLE "Recipe" (
     "description" TEXT NOT NULL,
     "ingredients" TEXT[],
     "keywords" TEXT[],
+    "time" TEXT NOT NULL,
+    "nutriScore" TEXT NOT NULL,
+    "nutriments" JSONB NOT NULL,
+    "steps" TEXT[],
 
     CONSTRAINT "Recipe_pkey" PRIMARY KEY ("id")
 );

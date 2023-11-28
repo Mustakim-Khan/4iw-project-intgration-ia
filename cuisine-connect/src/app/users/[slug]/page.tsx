@@ -16,13 +16,13 @@ export default function UserDetails() {
     permanentRedirect('/')
   }
 
-  const getUser = async (email) =>  {
+  const getUser = async () =>  {
     const u = await currentUser();
     setUser(u);
   };
 
   React.useEffect(() => {
-    if (session?.user) getUser(session?.user.email);
+    if (session && session?.user) getUser();
     setLoading(false);
   }, [session?.user])
   
