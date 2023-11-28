@@ -6,7 +6,8 @@ import { Inter } from 'next/font/google'
 import AuthProvider from './components/providers/AuthProvider'
 import { getServerSession } from 'next-auth'
 import authOptions from './lib/authOptions'
-import './assistant/chatbot.css'
+import './components/assistant/chatbot.css'
+import AssistantChat from './components/assistant/Assistant'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -34,6 +35,7 @@ export default async function RootLayout({ children }) {
               <Sheet>
                   {children}
               </Sheet>
+              <AssistantChat></AssistantChat>
             </Box>
           </main>
         </AuthProvider>
