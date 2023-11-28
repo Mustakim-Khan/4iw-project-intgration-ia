@@ -31,6 +31,8 @@ export default function ReceipDetails({
 
   const [sideDishes, setSideDishes] = useState(null);
 
+  const [sideDishLoading, setSideDishLoading] = useState(false);
+
   function getContentShare(ingredients, recipeName) {
     let content = 'Voici la liste des ingrédients pour la recette ' + recipeName + ' :\n\n';
     ingredients.forEach(ingredient => {
@@ -67,6 +69,7 @@ export default function ReceipDetails({
   }
 
   function getSideDish() {
+    setSideDishLoading(true);
     const sideDishRoute = "/api/side-dish";
     const response = fetch(sideDishRoute, {
       method: "POST",
@@ -84,6 +87,8 @@ export default function ReceipDetails({
       })
       .catch((error) => {
         console.error("Error:", error);
+      }).finally(() => {
+        setSideDishLoading(false);
       });
   }
 
@@ -158,7 +163,7 @@ export default function ReceipDetails({
             </div>
 
             <Button type="button" variant="outlined" onClick={() => {getSideDish()}} >
-                  Accompagnement avec cette recette
+                  {sideDishLoading && <CircularProgress />} Accompagnement avec cette recette
             </Button>
 
             {sideDishes &&
