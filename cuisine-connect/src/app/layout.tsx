@@ -29,7 +29,7 @@ export default async function RootLayout({ children }) {
                 bgcolor: 'white',
                 // display: 'grid',
                 gridTemplateRows: '52px 0px 1fr',
-                minHeight: '110dvh',
+                minHeight: '90dvh',
               }}
             >
               <Sheet>
