@@ -95,7 +95,7 @@ export default function AssistantChat() {
     <div className="chat">
       <div className="chat-header">
         <div className="chat-admin">
-          <img src="./assets/img/user_logo.png" alt="logoChat" />
+          <img src="/assets/img/user_logo.png" alt="logoChat" />
           <div className="chat-admin-text">
             <h3>Discuter avec</h3>
             <h2>ChatBot</h2>
