@@ -1,6 +1,7 @@
 "use client";
 import {
   Box,
+  Button,
   CircularProgress,
   List,
   ListItem,
@@ -25,6 +26,41 @@ export default function ReceipDetails({
   const [loading, setLoading] = useState(false);
 
   const [content, setContent] = useState(null);
+
+  function getContentShare(ingredients, recipeName) {
+    let content = 'Voici la liste des ingrédients pour la recette ' + recipeName + ' :\n\n';
+    ingredients.forEach(ingredient => {
+      content += '- '+ingredient + '\n';
+    });
+    return content;
+  }
+
+  function copyToClipboard(content) {
+      navigator.clipboard.writeText(content).then(function() {
+        
+    }).catch(function(err) {
+        console.error('Erreur lors de la copie dans le presse-papier: ', err);
+    });
+  }
+
+  function sendEmail(subject, body) {
+    let linkEmail = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+    window.open(linkEmail);
+  }
+
+  function shareSocialMedia(socialMediasChoice, text) {
+    let twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+
+    switch (socialMediasChoice) {
+      case 'twitter':
+        window.open(twitterUrl);
+        break;
+      default:
+        break;
+    } 
+
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -76,6 +112,16 @@ export default function ReceipDetails({
                   <ListItem key={index}>{ingredient}</ListItem>
                 ))}
               </List>
+              <Button type="button" variant="plain" onClick={() => {copyToClipboard(getContentShare(ingredients, recipeName))}} >
+                Copier la liste des ingrédients
+              </Button>
+              <Button type="button" variant="plain" onClick={() => { sendEmail('Liste d\'ingredient pour '+ recipeName, getContentShare(ingredients, recipeName)) }} >
+                Email
+              </Button>
+
+              <Button type="button" variant="plain" onClick={() => { shareSocialMedia('twitter', getContentShare(ingredients, recipeName)) }} >
+                Twitter
+              </Button>
             </div>
             <div>
               <List>
