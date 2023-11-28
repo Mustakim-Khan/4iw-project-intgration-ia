@@ -35,7 +35,7 @@ const recipeInfoSchema = z.object({
   nom: z.string(),
   description: z.string(),
   temps: z.string(),
-})
+});
 
 const recipeSchema = z.array(recipeInfoSchema);
 
@@ -78,7 +78,7 @@ export default function Home() {
           return recipeSchema.safeParse(data);
         })
         .then((newRecipes) => {
-          setRecipes(newRecipes.data);
+          setRecipes(newRecipes.data ?? []);
         })
         .catch((error) => {
           console.error(error);

@@ -7,7 +7,6 @@ const postSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  console.log("REQUEST :::::::::::", request);
   const body = await request.json();
   const { search } = postSchema.parse(body);
 
