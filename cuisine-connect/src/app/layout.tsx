@@ -3,7 +3,8 @@ import { Box, Sheet } from '@mui/joy'
 import Header from './components/Header'
 import './globals.css'
 import { Inter } from 'next/font/google'
-import './assistant/chatbot.css'
+import './components/assistant/chatbot.css'
+import AssistantChat from './components/assistant/Assistant'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,6 +30,8 @@ export default function RootLayout({ children }) {
             <Sheet>
               {children}
             </Sheet>
+
+            <AssistantChat></AssistantChat>
           </Box>
         </main>
       </body>
