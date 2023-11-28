@@ -18,7 +18,7 @@ export default function ReceipDetails({
 }) {
   const detailsRoute = "/api/details";
 
-  const recipeName = params.slug.replace(/-/g, " ");
+  const recipeName = decodeURIComponent(params.slug.replace(/-/g, " "));
   const [ingredients, setIngredients] = useState([]);
   const [steps, setSteps] = useState([]);
   const [description, setDescription] = useState("");
@@ -81,7 +81,7 @@ export default function ReceipDetails({
               <List>
                 <Typography level="h3">Étapes :</Typography>
                 {steps.map((step) => (
-                  <ListItem>{step}</ListItem>
+                  <ListItem key={step}>{step}</ListItem>
                 ))}
               </List>
             </div>
