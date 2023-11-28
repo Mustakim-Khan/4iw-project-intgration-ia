@@ -2,6 +2,8 @@
 import {
   Box,
   Button,
+  Card,
+  CardContent,
   CircularProgress,
   List,
   ListItem,
@@ -26,6 +28,8 @@ export default function ReceipDetails({
   const [loading, setLoading] = useState(false);
 
   const [content, setContent] = useState(null);
+
+  const [sideDishes, setSideDishes] = useState(null);
 
   function getContentShare(ingredients, recipeName) {
     let content = 'Voici la liste des ingrédients pour la recette ' + recipeName + ' :\n\n';
@@ -60,6 +64,27 @@ export default function ReceipDetails({
         break;
     } 
 
+  }
+
+  function getSideDish() {
+    const sideDishRoute = "/api/side-dish";
+    const response = fetch(sideDishRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        recipe: recipeName,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const dataContent = JSON.parse(data.result.content) as Object;
+        setSideDishes(Object.values(dataContent));
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }
 
   useEffect(() => {
@@ -131,6 +156,24 @@ export default function ReceipDetails({
                 ))}
               </List>
             </div>
+
+            <Button type="button" variant="outlined" onClick={() => {getSideDish()}} >
+                  Accompagnement avec cette recette
+            </Button>
+
+            {sideDishes &&
+              <div className="flex">
+                {sideDishes.map((sideDish, index) => (
+                  <Card key={index} className="mt-2 mb-4 mr-1">
+                    <CardContent>
+                      <Typography level="h3">{sideDish.recipeName}</Typography>
+                      <Typography level="body-md">{sideDish.recipeDescription}</Typography>
+                    </CardContent>
+                  </Card>
+                ))}
+                
+              </div>
+            }
           </div>
         )}
       </Sheet>
