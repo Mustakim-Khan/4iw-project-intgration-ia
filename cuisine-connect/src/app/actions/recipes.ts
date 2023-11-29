@@ -1,8 +1,5 @@
 'use server'
-
-import { getServerSession } from "next-auth/next"
-import authOptions, {prisma} from "../lib/authOptions"
-import { NextApiRequest, NextApiResponse } from "next";
+import {prisma} from "../lib/authOptions"
 
 
 export async function findRecipeById(id: string) {
@@ -15,6 +12,9 @@ export async function findRecipeById(id: string) {
 
 export async function findRecipes() {
   return await prisma.recipe.findMany({
-    include: {ratings: true}
+    // select: {
+    //   title: true
+    // },
+    include: {ratings: true, comments: true},
   })
 }
