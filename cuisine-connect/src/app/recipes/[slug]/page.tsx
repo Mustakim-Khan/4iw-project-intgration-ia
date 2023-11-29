@@ -12,6 +12,7 @@ import {
 } from "@mui/joy";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { URLSearchParams } from "url";
 import { set } from "zod";
 
 export default function ReceipDetails({
@@ -20,8 +21,11 @@ export default function ReceipDetails({
   params: { slug: string };
 }) {
   const detailsRoute = "/api/details";
+  const commentsRoute = "/api/comments";
 
-  const recipeName = decodeURIComponent(params.slug.replace(/-/g, " ")).charAt(0).toUpperCase() + decodeURIComponent(params.slug.replace(/-/g, " ")).slice(1);
+  const recipeName =
+    decodeURIComponent(params.slug.replace(/-/g, " ")).charAt(0).toUpperCase() +
+    decodeURIComponent(params.slug.replace(/-/g, " ")).slice(1);
   const lowerCaseRecipeName = recipeName.toLowerCase();
   const [ingredients, setIngredients] = useState([]);
   const [steps, setSteps] = useState([]);
@@ -34,39 +38,48 @@ export default function ReceipDetails({
 
   const [sideDishLoading, setSideDishLoading] = useState(false);
 
+  const [comments, setComments] = useState([]);
+
+  const [recipeId, setRecipeId] = useState("");
+
   function getContentShare(ingredients, recipeName) {
-    let content = 'Voici la liste des ingrédients pour la recette ' + recipeName + ' :\n\n';
-    ingredients.forEach(ingredient => {
-      content += '- '+ingredient + '\n';
+    let content =
+      "Voici la liste des ingrédients pour la recette " + recipeName + " :\n\n";
+    ingredients.forEach((ingredient) => {
+      content += "- " + ingredient + "\n";
     });
     return content;
   }
 
   function copyToClipboard(content) {
-      navigator.clipboard.writeText(content).then(function() {
-        
-    }).catch(function(err) {
-        console.error('Erreur lors de la copie dans le presse-papier: ', err);
-    });
+    navigator.clipboard
+      .writeText(content)
+      .then(function () {})
+      .catch(function (err) {
+        console.error("Erreur lors de la copie dans le presse-papier: ", err);
+      });
   }
 
   function sendEmail(subject, body) {
-    let linkEmail = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    let linkEmail = `mailto:?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
 
     window.open(linkEmail);
   }
 
   function shareSocialMedia(socialMediasChoice, text) {
-    let twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    let twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      text
+    )}`;
 
     switch (socialMediasChoice) {
-      case 'twitter':
+      case "twitter":
         window.open(twitterUrl);
         break;
       default:
         break;
-    } 
-
+    }
   }
 
   function getSideDish() {
@@ -88,7 +101,8 @@ export default function ReceipDetails({
       })
       .catch((error) => {
         console.error("Error:", error);
-      }).finally(() => {
+      })
+      .finally(() => {
         setSideDishLoading(false);
       });
   }
@@ -112,6 +126,7 @@ export default function ReceipDetails({
       setDescription(data.recipe.description);
       setIngredients(data.recipe.ingredients);
       setSteps(data.recipe.steps);
+      setRecipeId(data.recipe.id);
       setLoading(false);
     };
     const response = getData()
@@ -119,7 +134,33 @@ export default function ReceipDetails({
       .catch((error) => {
         console.error("Error:", error);
       });
+
+    // const getComments = async () => {
+    //   const response = await fetch(commentsRoute + `/?recipeId=${recipeId}`);
+    //   const data = await response.json();
+    //   setComments(data.comments);
+    // };
+    // const commentsResponse = getComments()
+    //   .then((response) => response)
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
   }, []);
+
+  useEffect(() => {
+    if (recipeId === "") return;
+    const getComments = async () => {
+      const response = await fetch(commentsRoute + `/?recipeId=${recipeId}`);
+      const data = await response.json();
+      setComments(data.comments);
+      console.log(data.comments);
+    };
+    const commentsResponse = getComments()
+      .then((response) => response)
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, [recipeId]);
 
   return (
     <Box>
@@ -139,18 +180,42 @@ export default function ReceipDetails({
             <div className="mb-6">
               <Typography level="h3">Ingrédients requis :</Typography>
               <List>
-                {ingredients.map((ingredient,index) => (
+                {ingredients.map((ingredient, index) => (
                   <ListItem key={index}>{ingredient}</ListItem>
                 ))}
               </List>
-              <Button type="button" variant="plain" onClick={() => {copyToClipboard(getContentShare(ingredients, recipeName))}} >
+              <Button
+                type="button"
+                variant="plain"
+                onClick={() => {
+                  copyToClipboard(getContentShare(ingredients, recipeName));
+                }}
+              >
                 Copier la liste des ingrédients
               </Button>
-              <Button type="button" variant="plain" onClick={() => { sendEmail('Liste d\'ingredient pour '+ recipeName, getContentShare(ingredients, recipeName)) }} >
+              <Button
+                type="button"
+                variant="plain"
+                onClick={() => {
+                  sendEmail(
+                    "Liste d'ingredient pour " + recipeName,
+                    getContentShare(ingredients, recipeName)
+                  );
+                }}
+              >
                 Email
               </Button>
 
-              <Button type="button" variant="plain" onClick={() => { shareSocialMedia('twitter', getContentShare(ingredients, recipeName)) }} >
+              <Button
+                type="button"
+                variant="plain"
+                onClick={() => {
+                  shareSocialMedia(
+                    "twitter",
+                    getContentShare(ingredients, recipeName)
+                  );
+                }}
+              >
                 Twitter
               </Button>
             </div>
@@ -163,23 +228,55 @@ export default function ReceipDetails({
               </List>
             </div>
 
-            <Button type="button" variant="outlined" onClick={() => {getSideDish()}} >
-                  {sideDishLoading && <CircularProgress />} Accompagnement avec cette recette
+            <Button
+              type="button"
+              variant="outlined"
+              onClick={() => {
+                getSideDish();
+              }}
+            >
+              {sideDishLoading && <CircularProgress />} Accompagnement avec
+              cette recette
             </Button>
 
-            {sideDishes &&
+            {sideDishes && (
               <div className="flex">
                 {sideDishes.map((sideDish, index) => (
                   <Card key={index} className="mt-2 mb-4 mr-1">
                     <CardContent>
                       <Typography level="h3">{sideDish.recipeName}</Typography>
-                      <Typography level="body-md">{sideDish.recipeDescription}</Typography>
+                      <Typography level="body-md">
+                        {sideDish.recipeDescription}
+                      </Typography>
                     </CardContent>
                   </Card>
                 ))}
-                
               </div>
-            }
+            )}
+
+            {comments && (
+              <div className="mt-3">
+                <Card>
+                  <CardContent>
+                    <Typography level="h3">Commentaires</Typography>
+                    <List>
+                      {comments.map((comment, index) => (
+                        <ListItem key={index}>
+                          <Card sx={{ width: '100%' }}>
+                            <Typography level="title-lg">
+                              {comment.owner.name}
+                            </Typography>
+                            <Typography level="body-md">
+                              {comment.comment}
+                            </Typography>
+                          </Card>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
           </div>
         )}
       </Sheet>
