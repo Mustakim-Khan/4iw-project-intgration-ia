@@ -1,9 +1,9 @@
 'use client'
 import * as React from 'react';
-import { permanentRedirect } from 'next/navigation'
+import { permanentRedirect, redirect } from 'next/navigation'
 import { Box, Sheet, Typography } from '@mui/joy'
 import { useSession } from 'next-auth/react';
-import { currentUser, findUserByEmail } from '../../actions/users';
+import { currentUser } from '../../actions/users';
 import { User } from '@prisma/client';
 
 export default function UserDetails() {
@@ -13,16 +13,16 @@ export default function UserDetails() {
   
   // Redirect if user session is not defined
   if (!session) {
-    permanentRedirect('/')
+    redirect('/')
   }
 
-  const getUser = async (email) =>  {
+  const getUser = async () =>  {
     const u = await currentUser();
     setUser(u);
   };
 
   React.useEffect(() => {
-    if (session?.user) getUser(session?.user.email);
+    if (session && session?.user) getUser();
     setLoading(false);
   }, [session?.user])
   

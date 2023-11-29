@@ -13,16 +13,10 @@ import {
   CircularProgress,
 } from "@mui/joy";
 import { z } from "zod";
-
+import { signIn, useSession } from 'next-auth/react';
 import RecipeCard from "./components/RecipeCard";
-
-// const schema = z.object({
-//   message: z.object({
-//     nom: z.string(),
-//     description: z.string(),
-//     image: z.string(),
-//   }),
-// });
+import useRecipeStore from "../../store/recipeStore";
+import useFavoriteStore from "../../store/favoriteStore";
 
 const schema = z.object({
   message: z.object({
@@ -42,18 +36,26 @@ const recipeSchema = z.array(recipeInfoSchema);
 const searchRoute = "/api/search";
 
 export default function Home() {
+  const {data: session} = useSession()
   const [search, setSearch] = React.useState("");
-  const [recipes, setRecipes] = React.useState([]);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
+  // const [recipes, setRecipes] = React.useState([]);
+  const { recipes, getRecipes } = useRecipeStore((state) => state)
+  const { items, getFavorites } = useFavoriteStore((state) => state)
 
   const updateSearch = React.useCallback((event) => {
     setSearch(event.target.value);
   }, []);
 
+  
+
   const getSearchResults = React.useCallback(
     (event) => {
       event.preventDefault();
-      setLoading(true);
+      if (!session || !session.user) {
+        signIn()
+      } else {
+        setLoading(true);
       setRecipes([]);
       setSearch("");
       fetch(searchRoute, {
@@ -86,11 +88,27 @@ export default function Home() {
         .finally(() => {
           setLoading(false);
         });
+      }
     },
     [search]
   );
 
-  return (
+  React.useEffect(() => {
+    // setLoading(true)
+    // Fetch Recipes
+    getRecipes()
+    setLoading(false)
+  }, [])
+
+  React.useEffect(() => {
+    if (session && session.user){
+      // Fetch favorites and Rating
+      getFavorites()
+    }
+  }, [session?.user])
+
+
+  return ( 
     <Box sx={{ gap: 2, m: 2, bgcolor: "white" }} justifyContent="space-between">
       <Stack component="form" spacing={1} onSubmit={getSearchResults}>
         <Input
@@ -110,34 +128,27 @@ export default function Home() {
           {" "}
           Les Recettes
         </Typography>
-        {recipes.length !== 0 ? (
-          <Grid
-            container
-            gap={2}
-            sx={{ flexGrow: 1 }}
-            justifyContent="space-around"
-            alignItems=""
-          >
-            {recipes.map((recipe, index) => (
-              <Grid key={index}>
-                <RecipeCard
-                  nom={recipe.nom}
-                  description={recipe.description}
-                  temps={recipe.temps}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        ) : loading == true ? (
-          <Box>
-            <Typography textAlign="center">
-              <CircularProgress />
-            </Typography>
-          </Box>
-        ) : (
-          <Box>
-            <Typography textAlign="center">No recipes to display</Typography>
-          </Box>
+        {loading == true && recipes.length == 0 ? (
+          <Box><Typography textAlign="center"><CircularProgress color="neutral"/></Typography></Box>
+        ) : ( !loading && recipes.length > 0 ?
+          (
+            <Grid
+              container
+              gap={2}
+              sx={{ flexGrow: 1 }}
+              justifyContent="space-around"
+            >
+              {recipes.map((recipe, index) => (
+                <Grid key={index}>
+                  <RecipeCard data={recipe} favorites={items} />       
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <Box>
+              <Typography textAlign="center">No recipes to display</Typography>
+            </Box>
+          )
         )}
       </Box>
     </Box>
