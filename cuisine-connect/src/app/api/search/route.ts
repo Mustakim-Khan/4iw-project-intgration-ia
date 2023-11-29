@@ -39,8 +39,6 @@ ${JSON.stringify(recipes)}
 Voici l'objet user :
 ${JSON.stringify(user)}`;
 
-console.log("systemContent", systemContent);
-
   const completions = await openai.chat.completions.create({
     model: "gpt-3.5-turbo",
     messages: [
@@ -62,8 +60,6 @@ console.log("systemContent", systemContent);
       },
     ],
   });
-
-  console.log("completions", completions.choices[0].message);
 
   return NextResponse.json({
     message: completions.choices[0].message as unknown as string,

@@ -21,3 +21,11 @@ export async function findAllRecipesForRequest() {
         }
     });
 }
+
+export async function findByTitle(title: string) {
+    return await prisma.recipe.findUnique({
+        where: {
+            title: title
+        }
+    });
+}
