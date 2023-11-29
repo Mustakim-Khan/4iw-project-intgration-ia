@@ -34,6 +34,11 @@ export async function findAllRecipesForRequest() {
             steps: false,
             nutriments: true,
             nutriScore: true,
+            ratings: {
+                select: {
+                    value: true
+                }
+            },
         }
     });
 }

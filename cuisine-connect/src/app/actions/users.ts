@@ -35,23 +35,8 @@ export async function findUserFavoriteRecipes() {
 
 export async function updateRecipeToFavorite(recipeId: string, isNewRating) {
   const user = await currentUser()
-  // return await prisma.rating.create({
-  //   data: {
-  //     value: 1,
-  //     userId: user.id,
-  //     recipeId: recipeId
-  //   },
-  // })
-  if (isNewRating) {
-    // const newUserRating = await prisma.rating.create({
-    //   data: {
-    //     value: 1,
-    //     userId: user.id,
-    //     recipeId: recipeId
-    //   },
-    // })
-    // user.ratings.push(newUserRating)
 
+  if (isNewRating) {
     const userUpdated = await prisma.user.update({
       where: { id: user.id },
       data: {

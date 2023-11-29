@@ -26,7 +26,7 @@ const useFavoriteStore = create<UserFavoriteRecipeState>((set, get) => ({
             // Remove rating from user.ratings
             updateRecipeToFavorite(recipeId, false).then((data) => {
                 ratingList.filter(rating => rating.recipeId == recipeId)
-                set({items: [...ratingList]})
+                set({items: [...ratingList,]})
             })
         } else {
             // Add rating in user.ratings

@@ -25,10 +25,16 @@ const schema = z.object({
   }),
 });
 
+const schemaRating = z.object({
+    value: z.number(),
+});
+
 const recipeInfoSchema = z.object({
-  nom: z.string(),
-  description: z.string(),
-  temps: z.string(),
+  id: z.string(),
+  title: z.string(),
+  // description: z.string(),
+  time: z.string(),
+  ratings: z.array(schemaRating),
 });
 
 const recipeSchema = z.array(recipeInfoSchema);
@@ -39,15 +45,13 @@ export default function Home() {
   const {data: session} = useSession()
   const [search, setSearch] = React.useState("");
   const [loading, setLoading] = React.useState(true);
-  // const [recipes, setRecipes] = React.useState([]);
-  const { recipes, getRecipes } = useRecipeStore((state) => state)
+  const [filteredRecipes, setFilteredRecipes] = React.useState([]);
+  // const { recipes, getRecipes } = useRecipeStore((state) => state)
   const { items, getFavorites } = useFavoriteStore((state) => state)
 
   const updateSearch = React.useCallback((event) => {
     setSearch(event.target.value);
   }, []);
-
-  
 
   const getSearchResults = React.useCallback(
     (event) => {
@@ -56,48 +60,49 @@ export default function Home() {
         signIn()
       } else {
         setLoading(true);
-      setRecipes([]);
-      setSearch("");
-      fetch(searchRoute, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          search,
-        }),
-      })
-        .then((response) => {
-          return response.json();
+        setFilteredRecipes([]);
+        setSearch("");
+        fetch(searchRoute, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            search,
+          }),
         })
-        .then((json) => {
-          return schema.safeParse(json);
-        })
-        .then((data) => {
-          return JSON.parse(data.data.message.content);
-        })
-        .then((data) => {
-          return recipeSchema.safeParse(data);
-        })
-        .then((newRecipes) => {
-          setRecipes(newRecipes.data ?? []);
-        })
-        .catch((error) => {
-          console.error(error);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+          .then((response) => {
+            return response.json();
+          })
+          .then((json) => {
+            return schema.safeParse(json);
+          })
+          .then((data) => {
+            return JSON.parse(data.data.message.content);
+          })
+          .then((data) => {
+            return recipeSchema.safeParse(data);
+          })
+          .then((newRecipes) => {
+            console.log('datas => ', newRecipes);
+            setFilteredRecipes(newRecipes.data ?? []);
+          })
+          .catch((error) => {
+            console.error(error);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       }
     },
     [search]
   );
 
   React.useEffect(() => {
-    // setLoading(true)
     // Fetch Recipes
-    getRecipes()
+    // getRecipes()
     setLoading(false)
+    console.log("filteredRecipes => ", filteredRecipes);
   }, [])
 
   React.useEffect(() => {
@@ -106,7 +111,6 @@ export default function Home() {
       getFavorites()
     }
   }, [session?.user])
-
 
   return ( 
     <Box sx={{ gap: 2, m: 2, bgcolor: "white" }} justifyContent="space-between">
@@ -128,9 +132,9 @@ export default function Home() {
           {" "}
           Les Recettes
         </Typography>
-        {loading == true && recipes.length == 0 ? (
+        {loading == true && (filteredRecipes.length == 0) ? (
           <Box><Typography textAlign="center"><CircularProgress color="neutral"/></Typography></Box>
-        ) : ( !loading && recipes.length > 0 ?
+        ) : ( !loading && filteredRecipes.length > 0 ?
           (
             <Grid
               container
@@ -138,7 +142,7 @@ export default function Home() {
               sx={{ flexGrow: 1 }}
               justifyContent="space-around"
             >
-              {recipes.map((recipe, index) => (
+              {filteredRecipes.map((recipe, index) => (
                 <Grid key={index}>
                   <RecipeCard data={recipe} favorites={items} />       
                 </Grid>
