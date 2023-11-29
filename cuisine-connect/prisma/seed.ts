@@ -5,7 +5,7 @@ const prisma = new PrismaClient();
 async function main() {
   const thon1 = await prisma.recipe.create({
     data: {
-      title: "Avocat au thon léger sans crème",
+      title: "avocat au thon léger sans crème",
       description: "Découvrez notre savoureuse recette d'avocat au thon léger sans crème, une option délicieuse et saine qui fera le bonheur de vos papilles tout en préservant votre bien-être. Ces demi-avocats gorgés de nutriments sont généreusement garnis d'un mélange de thon léger, d'oignons rouges croquants, de céleri frais, de persil aromatique et de câpres, le tout rehaussé d'une vinaigrette fraîche à base de jus de citron et d'huile d'olive extra vierge. Chaque bouchée offre une explosion de saveurs équilibrées, avec la crémosité de l'avocat mariée à la légèreté du thon, le tout relevé par la fraîcheur des légumes et l'acidité subtile du citron. Cette recette, simple à préparer, constitue une entrée ou un plat léger idéal pour un déjeuner sain. Servez ces avocats au thon en toute occasion et régalez-vous d'une expérience culinaire aussi délicieuse que nutritive. Une fusion parfaite de fraîcheur et de saveurs à partager avec vos proches. Bon appétit !",
       ingredients: [
         "Du jus de citron jaune",
@@ -45,7 +45,7 @@ async function main() {
 
   const thon2 = await prisma.recipe.create({
     data: {
-      title: "Pain de thon au surimi sans gluten",
+      title: "pain de thon au surimi sans gluten",
       description: "Découvrez notre délicieuse recette de Pain de thon sans gluten, une option savoureuse et légère pour les amateurs de saveurs marines. Ce pain de thon moelleux est préparé avec une combinaison délicate de thon, de surimi, et d'ingrédients sans gluten, offrant une alternative gourmande pour ceux qui suivent un régime sans gluten.",
       ingredients: [
         "190g de thon entier au naturel",
@@ -83,7 +83,7 @@ async function main() {
 
   const thon3 = await prisma.recipe.create({
     data: {
-      title: "Tarte au thon et à la tomate",
+      title: "tarte au thon et à la tomate",
       description: "Découvrez notre irrésistible Tarte au thon et à la tomate, une explosion de saveurs méditerranéennes qui ravira vos papilles. Cette recette allie la richesse du thon, la fraîcheur des tomates juteuses, et la finesse d'une garniture savoureuse, le tout enveloppé dans une délicieuse croûte dorée.",
       ingredients: [
         "500g de coulis tomate",
@@ -122,7 +122,7 @@ async function main() {
 
   const poulet1 = await prisma.recipe.create({
     data: {
-      title: "Poulet grillé aux poivrons rouges et oignons doux",
+      title: "poulet grillé aux poivrons rouges et oignons doux",
       description: "Découvrez notre succulente recette de Poulet Grillé aux Poivrons Rouges et Oignons Doux, une explosion de saveurs méditerranéennes qui éveillera vos papilles. Cette recette équilibrée allie la tendreté du poulet grillé à la douceur des poivrons rouges rôtis et à l'arôme délicat des oignons doux, créant ainsi un festin gourmand pour tous les amateurs de cuisine.",
       ingredients: [
         "10ml d'huile d'olive",
@@ -165,7 +165,7 @@ async function main() {
 
   const poulet2 = await prisma.recipe.create({
     data: {
-      title: "Poulet au parmesan et tomates cerises rôties",
+      title: "poulet au parmesan et tomates cerises rôties",
       description: "Découvrez notre savoureuse recette de Poulet au Parmesan et Tomates Cerises Rôties, une fusion délicieuse entre la tendreté du poulet, le goût riche du parmesan et la douceur des tomates cerises rôties. Cette création gastronomique est un véritable régal pour les papilles, mariant des saveurs authentiques et des textures parfaitement équilibrées.",
       ingredients: [
         "20g d'huile d'olive - Composée d'huiles d'olive raffinées et d'huiles d'olive vierges",
@@ -211,7 +211,7 @@ async function main() {
 
   const fraise1 = await prisma.recipe.create({
     data: {
-      title: "Gâteau aux fraises et à la menthe",
+      title: "gâteau aux fraises et à la menthe",
       description: "Succombez à la fraîcheur estivale avec notre irrésistible Gâteau aux Fraises et à la Menthe. Cette délicieuse création combine la douceur des fraises juteuses avec l'arôme rafraîchissant de la menthe, créant ainsi un dessert parfait pour les journées ensoleillées. Facile à préparer, ce gâteau saura émerveiller vos papilles et ravir les amateurs de saveurs fruitées.",
       ingredients: [
         "180g farine de Blé",
@@ -252,7 +252,7 @@ async function main() {
 
   const saladeFruits = await prisma.recipe.create({
     data: {
-      title: "Salade de fruits exotiques à la noix de coco râpée",
+      title: "salade de fruits exotiques à la noix de coco râpée",
       description: "Transportez vos papilles vers une escapade tropicale avec notre Salade de Fruits Exotiques à la Noix de Coco Râpée. Cette délicieuse création associe une variété de fruits exotiques fraîchement coupés à la texture tendre de la noix de coco râpée, créant ainsi une explosion de saveurs sucrées et rafraîchissantes. Idéale pour une journée ensoleillée ou en tant que dessert léger, cette salade de fruits est un véritable festin pour les sens.",
       ingredients: [
         "10ml de jus de citron vert",
@@ -297,7 +297,7 @@ async function main() {
 
   const smoothieBanane = await prisma.recipe.create({
     data: {
-      title: "Smoothie à la banane",
+      title: "smoothie à la banane",
       description: "Découvrez notre Smoothie à la Banane, une boisson rafraîchissante et énergisante qui marie la douceur naturelle des bananes à la fraîcheur des ingrédients sélectionnés. Facile à préparer et délicieusement sain, ce smoothie est une option idéale pour un petit-déjeuner rapide, une collation revitalisante ou même comme dessert léger. Laissez-vous emporter par la crémeuse texture de ce smoothie, offrant une pause gourmande tout en prenant soin de votre bien-être.",
       ingredients: [
         "4 cuillère à soupe de douceur végétale Amande Vanille",
@@ -333,7 +333,7 @@ async function main() {
 
   const saladeConcombre = await prisma.recipe.create({
     data: {
-      title: "Salade de concombre, feta et menthe",
+      title: "salade de concombre feta et menthe",
       description: "Découvrez l'harmonie rafraîchissante de notre Salade de Concombre, Feta et Menthe – une fusion de saveurs qui éveillera vos papilles et vous transportera vers une expérience gustative estivale. Cette salade légère et gourmande combine la fraîcheur croquante du concombre, la texture crémeuse de la feta et l'arôme vivifiant de la menthe. Parfaite en tant qu'accompagnement léger ou comme plat principal pour une option saine et délicieuse.",
       ingredients: [
         "10ml d'huile d'olive",

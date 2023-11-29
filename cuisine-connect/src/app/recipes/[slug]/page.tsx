@@ -21,7 +21,8 @@ export default function ReceipDetails({
 }) {
   const detailsRoute = "/api/details";
 
-  const recipeName = decodeURIComponent(params.slug.replace(/-/g, " "));
+  const recipeName = decodeURIComponent(params.slug.replace(/-/g, " ")).charAt(0).toUpperCase() + decodeURIComponent(params.slug.replace(/-/g, " ")).slice(1);
+  const lowerCaseRecipeName = recipeName.toLowerCase();
   const [ingredients, setIngredients] = useState([]);
   const [steps, setSteps] = useState([]);
   const [description, setDescription] = useState("");
@@ -104,13 +105,13 @@ export default function ReceipDetails({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          search: recipeName,
+          search: lowerCaseRecipeName,
         }),
       });
       const data = await response.json();
-      setDescription(data.description.content);
-      setIngredients(JSON.parse(data.recipe.content).ingredients);
-      setSteps(JSON.parse(data.recipe.content).steps);
+      setDescription(data.recipe.description);
+      setIngredients(data.recipe.ingredients);
+      setSteps(data.recipe.steps);
       setLoading(false);
     };
     const response = getData()
@@ -184,9 +185,4 @@ export default function ReceipDetails({
       </Sheet>
     </Box>
   );
-}
-{
-  /* <div>{description}</div>
-            <div>{ingredients}</div>
-            <div>{steps}</div> */
 }
