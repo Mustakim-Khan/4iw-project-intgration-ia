@@ -57,7 +57,7 @@ export default function ReceipDetails({
 
   const [recipeRecommandations, setRecipeRecommandations] = useState(null);
   const [recipeRecommandationsLoading, setRecipeRecommandationsLoading] = useState(false);
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState(null);
 
   const [recipeId, setRecipeId] = useState("");
 
