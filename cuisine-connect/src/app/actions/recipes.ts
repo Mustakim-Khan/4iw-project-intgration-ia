@@ -50,3 +50,18 @@ export async function findByTitle(title: string) {
         }
     });
 }
+
+export async function findById(recipeId: string) {
+    return await prisma.recipe.findUnique({
+        where: {
+            id: recipeId
+        },
+        include: {
+            comments: {
+                include: {
+                    owner: true
+                }
+            },
+        }
+    });
+}
