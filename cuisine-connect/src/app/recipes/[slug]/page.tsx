@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   CircularProgress,
+  Grid,
   List,
   ListItem,
   Sheet,
@@ -13,6 +14,7 @@ import {
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { set } from "zod";
+import RecipeCard from "../../components/RecipeCard";
 
 export default function ReceipDetails({
   params,
@@ -32,6 +34,9 @@ export default function ReceipDetails({
   const [sideDishes, setSideDishes] = useState(null);
 
   const [sideDishLoading, setSideDishLoading] = useState(false);
+
+  const [recipeRecommandations, setRecipeRecommandations] = useState(null);
+  const [recipeRecommandationsLoading, setRecipeRecommandationsLoading] = useState(false);
 
   function getContentShare(ingredients, recipeName) {
     let content = 'Voici la liste des ingrédients pour la recette ' + recipeName + ' :\n\n';
@@ -92,6 +97,30 @@ export default function ReceipDetails({
       });
   }
 
+  function getRecommandationRecipe() {
+    setRecipeRecommandationsLoading(true);
+    const recommandationRecipeRoute = "/api/recommandation-recipe";
+    const response = fetch(recommandationRecipeRoute, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        search: recipeName,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const dataContent = JSON.parse(data.message.content) as Array<Object>;
+        setRecipeRecommandations(dataContent);        
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      }).finally(() => {
+        setRecipeRecommandationsLoading(false);
+      });
+  }
+
   useEffect(() => {
     setLoading(true);
     setIngredients(null);
@@ -112,6 +141,7 @@ export default function ReceipDetails({
       setIngredients(JSON.parse(data.recipe.content).ingredients);
       setSteps(JSON.parse(data.recipe.content).steps);
       setLoading(false);
+      getRecommandationRecipe();
     };
     const response = getData()
       .then((response) => response)
@@ -159,6 +189,40 @@ export default function ReceipDetails({
                 {steps.map((step) => (
                   <ListItem key={step}>{step}</ListItem>
                 ))}
+              </List>
+            </div>
+
+            <div>
+              <List>
+                <Typography level="h3">Recommendations :</Typography>
+                {recipeRecommandations && recipeRecommandations.length !== 0 ? (
+                  <Grid
+                    container
+                    gap={2}
+                    sx={{ flexGrow: 1 }}
+                    alignItems=""
+                  >
+                    {recipeRecommandations.map((recipe, index) => (
+                      <Grid key={index}>
+                        <RecipeCard
+                          nom={recipe.nom}
+                          description={recipe.description}
+                          temps={recipe.temps}
+                        />
+                      </Grid>
+                    ))}
+                  </Grid>
+                ) : recipeRecommandationsLoading == true ? (
+                  <Box>
+                    <Typography textAlign="center">
+                      <CircularProgress />
+                    </Typography>
+                  </Box>
+                ) : (
+                  <Box>
+                    <Typography textAlign="center">Aucune recommandation</Typography>
+                  </Box>
+                )}
               </List>
             </div>
 
