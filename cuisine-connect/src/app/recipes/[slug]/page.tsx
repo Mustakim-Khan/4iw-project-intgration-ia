@@ -226,7 +226,7 @@ export default function ReceipDetails({
                   </AccordionDetails>
                 </Accordion>
 
-                <Accordion defaultExpanded>
+                <Accordion>
                   <AccordionSummary>Étapes :</AccordionSummary>
                   <AccordionDetails variant="soft">
                     <List>
@@ -237,7 +237,7 @@ export default function ReceipDetails({
                   </AccordionDetails>
                 </Accordion>
 
-                <Accordion defaultExpanded>
+                <Accordion>
                   <AccordionSummary>Recommendations :</AccordionSummary>
                   <AccordionDetails variant="soft">
                   <List>
@@ -273,7 +273,7 @@ export default function ReceipDetails({
                   </AccordionDetails>
                 </Accordion>
 
-                <Accordion defaultExpanded>
+                <Accordion>
                   <AccordionSummary>Accompagnements :</AccordionSummary>
                   <AccordionDetails variant="soft">
                   <Button type="button" variant="outlined" onClick={() => {getSideDish()}} >
