@@ -13,7 +13,7 @@ import {
   CircularProgress,
 } from "@mui/joy";
 import { z } from "zod";
-import { useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import RecipeCard from "./components/RecipeCard";
 import useRecipeStore from "../../store/recipeStore";
 import useFavoriteStore from "../../store/favoriteStore";
@@ -52,7 +52,10 @@ export default function Home() {
   const getSearchResults = React.useCallback(
     (event) => {
       event.preventDefault();
-      setLoading(true);
+      if (!session || !session.user) {
+        signIn()
+      } else {
+        setLoading(true);
       setRecipes([]);
       setSearch("");
       fetch(searchRoute, {
@@ -85,6 +88,7 @@ export default function Home() {
         .finally(() => {
           setLoading(false);
         });
+      }
     },
     [search]
   );
