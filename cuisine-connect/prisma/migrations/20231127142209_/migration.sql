@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Recipe" ALTER COLUMN "time" SET DATA TYPE TEXT;

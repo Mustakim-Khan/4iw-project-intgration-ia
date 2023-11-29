@@ -15,6 +15,8 @@ import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { set } from "zod";
 import RecipeCard from "../../components/RecipeCard";
+import useFavoriteStore from "../../../../store/favoriteStore";
+
 
 export default function ReceipDetails({
   params,
@@ -22,7 +24,7 @@ export default function ReceipDetails({
   params: { slug: string };
 }) {
   const detailsRoute = "/api/details";
-
+  const { items, getFavorites } = useFavoriteStore((state) => state)
   const recipeName = decodeURIComponent(params.slug.replace(/-/g, " ")).charAt(0).toUpperCase() + decodeURIComponent(params.slug.replace(/-/g, " ")).slice(1);
   const lowerCaseRecipeName = recipeName.toLowerCase();
   const [ingredients, setIngredients] = useState([]);
@@ -206,9 +208,10 @@ export default function ReceipDetails({
                     {recipeRecommandations.map((recipe, index) => (
                       <Grid key={index}>
                         <RecipeCard
-                          nom={recipe.nom}
-                          description={recipe.description}
-                          temps={recipe.temps}
+                          // nom={recipe.nom}
+                          // description={recipe.description}
+                          // temps={recipe.temps}
+                          data={recipe} favorites={items}
                         />
                       </Grid>
                     ))}
