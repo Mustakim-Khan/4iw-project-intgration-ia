@@ -1,16 +1,31 @@
-"use client";
+"use client"; 
 import {
+  Accordion,
+  AccordionGroup,
   Box,
   Button,
   Card,
   CardContent,
   CircularProgress,
   Grid,
+  IconButton,
   List,
   ListItem,
   Sheet,
   Typography,
 } from "@mui/joy";
+
+import AccordionDetails, {
+  accordionDetailsClasses,
+} from '@mui/joy/AccordionDetails';
+import AccordionSummary, {
+  accordionSummaryClasses,
+} from '@mui/joy/AccordionSummary';
+
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import EmailIcon from '@mui/icons-material/Email';
+import TwitterIcon from '@mui/icons-material/Twitter';
+
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { set } from "zod";
@@ -168,85 +183,121 @@ export default function ReceipDetails({
             <Typography level="body-md" className="mt-2 mb-4">
               {description}
             </Typography>
-            <div className="mb-6">
-              <Typography level="h3">Ingrédients requis :</Typography>
-              <List>
-                {ingredients.map((ingredient,index) => (
-                  <ListItem key={index}>{ingredient}</ListItem>
-                ))}
-              </List>
-              <Button type="button" variant="plain" onClick={() => {copyToClipboard(getContentShare(ingredients, recipeName))}} >
-                Copier la liste des ingrédients
-              </Button>
-              <Button type="button" variant="plain" onClick={() => { sendEmail('Liste d\'ingredient pour '+ recipeName, getContentShare(ingredients, recipeName)) }} >
-                Email
-              </Button>
 
-              <Button type="button" variant="plain" onClick={() => { shareSocialMedia('twitter', getContentShare(ingredients, recipeName)) }} >
-                Twitter
-              </Button>
-            </div>
-            <div>
-              <List>
-                <Typography level="h3">Étapes :</Typography>
-                {steps.map((step) => (
-                  <ListItem key={step}>{step}</ListItem>
-                ))}
-              </List>
-            </div>
+            <AccordionGroup
+                variant="outlined"
+                transition="0.2s"
+                sx={{
+                  maxWidth: '100%',
+                  borderRadius: 'lg',
+                  [`& .${accordionSummaryClasses.button}:hover`]: {
+                    bgcolor: 'transparent',
+                  },
+                  [`& .${accordionDetailsClasses.content}`]: {
+                    boxShadow: (theme) => `inset 0 1px ${theme.vars.palette.divider}`,
+                    [`&.${accordionDetailsClasses.expanded}`]: {
+                      paddingBlock: '0.75rem',
+                    },
+                  },
+                }}
+              >
+                <Accordion defaultExpanded>
+                  <AccordionSummary>Ingrédients requis :</AccordionSummary>
+                  <AccordionDetails variant="soft">
+                      <List>
+                        {ingredients.map((ingredient,index) => (
+                          <ListItem key={index}> • {ingredient}</ListItem>
+                        ))}
+                      </List>
+                      
+                      {ingredients && ingredients.length > 0 && recipeName &&
+                         <div className="flex">
+                          <Button type="button" size="sm" variant="outlined" className="mr-3" onClick={() => {copyToClipboard(getContentShare(ingredients, recipeName))}} >
+                            <IconButton> <ContentCopyIcon color="primary"/> </IconButton>
+                          </Button>
+                          <Button type="button" size="sm" variant="outlined" className="mr-3" onClick={() => { sendEmail('Liste d\'ingredient pour '+ recipeName, getContentShare(ingredients, recipeName)) }} >
+                              <IconButton> <EmailIcon color="primary"/> </IconButton>
+                          </Button>
+  
+                          <Button type="button" size="sm" variant="outlined" className="mr-3" onClick={() => { shareSocialMedia('twitter', getContentShare(ingredients, recipeName)) }} >
+                              <IconButton> <TwitterIcon color="primary"/> </IconButton>
+                          </Button>
+                        </div>
+                      }
 
-            <div>
-              <List>
-                <Typography level="h3">Recommendations :</Typography>
-                {recipeRecommandations && recipeRecommandations.length !== 0 ? (
-                  <Grid
-                    container
-                    gap={2}
-                    sx={{ flexGrow: 1 }}
-                    alignItems=""
-                  >
-                    {recipeRecommandations.map((recipe, index) => (
-                      <Grid key={index}>
-                        <RecipeCard
-                          // nom={recipe.nom}
-                          // description={recipe.description}
-                          // temps={recipe.temps}
-                          data={recipe} favorites={items}
-                        />
+                  </AccordionDetails>
+                </Accordion>
+
+                <Accordion defaultExpanded>
+                  <AccordionSummary>Étapes :</AccordionSummary>
+                  <AccordionDetails variant="soft">
+                    <List>
+                      {steps.map((step) => (
+                        <ListItem key={step}>• {step}</ListItem>
+                      ))}
+                    </List>
+                  </AccordionDetails>
+                </Accordion>
+
+                <Accordion defaultExpanded>
+                  <AccordionSummary>Recommendations :</AccordionSummary>
+                  <AccordionDetails variant="soft">
+                  <List>
+                    {recipeRecommandations && recipeRecommandations.length !== 0 ? (
+                      <Grid
+                        container
+                        gap={2}
+                        sx={{ flexGrow: 1 }}
+                        alignItems=""
+                      >
+                        {recipeRecommandations.map((recipe, index) => (
+                          <Grid key={index}>
+                            <RecipeCard
+                                data={recipe} favorites={items}
+                            />
+                          </Grid>
+                        ))}
                       </Grid>
-                    ))}
-                  </Grid>
-                ) : recipeRecommandationsLoading == true ? (
-                  <Box>
-                    <Typography textAlign="center">
-                      <CircularProgress />
-                    </Typography>
-                  </Box>
-                ) : (
-                  <Box>
-                    <Typography textAlign="center">Aucune recommandation</Typography>
-                  </Box>
-                )}
-              </List>
-            </div>
+                    ) : recipeRecommandationsLoading == true ? (
+                      <Box>
+                        <Typography textAlign="center">
+                          <CircularProgress />
+                        </Typography>
+                      </Box>
+                    ) : (
+                      <Box>
+                        <Typography textAlign="center">Aucune recommandation</Typography>
+                      </Box>
+                    )}
+                  </List>
+                  </AccordionDetails>
+                </Accordion>
 
-            <Button type="button" variant="outlined" onClick={() => {getSideDish()}} >
+                <Accordion defaultExpanded>
+                  <AccordionSummary>Accompagnements :</AccordionSummary>
+                  <AccordionDetails variant="soft">
+                  <Button type="button" variant="outlined" onClick={() => {getSideDish()}} >
                   {sideDishLoading && <CircularProgress />} Accompagnement avec cette recette
-            </Button>
+                    </Button> 
 
-            {sideDishes &&
-              <div className="flex">
-                {sideDishes.map((sideDish, index) => (
-                  <Card key={index} className="mt-2 mb-4 mr-1">
-                    <CardContent>
-                      <Typography level="h3">{sideDish.recipeName}</Typography>
-                      <Typography level="body-md">{sideDish.recipeDescription}</Typography>
-                    </CardContent>
-                  </Card>
-                ))}
-                
-              </div>
-            }
+                    {sideDishes &&
+                      <div className="flex">
+                        {sideDishes.map((sideDish, index) => (
+                          <Card key={index} className="mt-2 mb-4 mr-1">
+                            <CardContent>
+                              <Typography level="h3">{sideDish.recipeName}</Typography>
+                              <Typography level="body-md">{sideDish.recipeDescription}</Typography>
+                            </CardContent>
+                          </Card>
+                        ))}
+                        
+                      </div>
+                    }
+                  </AccordionDetails>
+                </Accordion>
+              </AccordionGroup>
+
+            
           </div>
         )}
       </Sheet>
