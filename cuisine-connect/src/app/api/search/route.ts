@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   Tu reverra un tableau Json en chaine de caractère dans lequel tu renverra la liste des recettes qui correspondent à la recherche, pas de texte avant ou après.
   Pour chaque recette, tu renverras un objet json contenant le nom de la recette, une description et un temps estimé pour cuisiner le plat.
   Le résultat final doit être cette forme zod : 'const schema = z.object({message: z.object({role: z.string(),content: z.string()})});'
-  Chaque recette doit être sous la forme :\{\"nom\": \"\",\"description\": \"\",\"temps\": \"\"},
+  Chaque recette doit être sous la forme :\{\"nom\": \"\",\"temps\": \"\"},
   Donne le résultat de la recherche sous forme d'un tableau de string sans clé pour le premier object.
   Pour donner le résultat, tu dois te reposer sur l'objet 'recipes' que je te fournis. Donc les résultats doivent obligatoirement provenir de l'objet 'recipes' que je te fournis. Si tu ne trouve pas de recettes dans l'object 'recettes' que je te fournis, envoie un tableau vide.
   Tu peut utilises les champs 'keywords' et 'title' pour filtrer les recettes en fonction de la recherche de l'utilisateur.
