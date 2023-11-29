@@ -278,7 +278,7 @@ export default function ReceipDetails({
                   <AccordionDetails variant="soft">
                   <Button type="button" variant="outlined" onClick={() => {getSideDish()}} >
                   {sideDishLoading && <CircularProgress />} Accompagnement avec cette recette
-                    </Button>
+                    </Button> 
 
                     {sideDishes &&
                       <div className="flex">
