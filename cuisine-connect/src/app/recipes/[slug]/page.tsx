@@ -153,7 +153,6 @@ export default function ReceipDetails({
       const response = await fetch(commentsRoute + `/?recipeId=${recipeId}`);
       const data = await response.json();
       setComments(data.comments);
-      console.log(data.comments);
     };
     const commentsResponse = getComments()
       .then((response) => response)
