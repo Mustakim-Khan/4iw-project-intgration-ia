@@ -27,13 +27,13 @@ export default function RecipeCard({data, favorites}) {
   // const nameUrl = name.replace(/ /g, "-").toLowerCase();
 
   const handleLikeClick = () => {
-    setIsFavorite(prev => !prev)
     if (!session || !session.user){
       signIn()
       return
     } 
+    setIsFavorite(prev => !prev)
     updateFavorites(data.id)
-    // getFavorites()
+    getFavorites()
   }
   
   React.useEffect(() => {
@@ -45,12 +45,12 @@ export default function RecipeCard({data, favorites}) {
     }
   }, [data, favorites])
 
-  React.useEffect(() => {
-    if (session && session.user){
-      // Fetch favorites
-      getFavorites()
-    }
-  }, [isFavorite])
+  // React.useEffect(() => {
+  //   if (session && session.user){
+  //     // Fetch favorites
+  //     getFavorites()
+  //   }
+  // }, [isFavorite])
   
   return (
     <Card variant="outlined" sx={{ width: 390 }}>
