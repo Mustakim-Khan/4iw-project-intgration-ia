@@ -72,3 +72,11 @@ export async function updateRecipeToFavorite(recipeId: string, isNewRating) {
     });
   }
 }
+
+export async function findUserById(id: string) {
+  return await prisma.user.findUnique({
+      where: {
+        id,
+      },
+  })
+}

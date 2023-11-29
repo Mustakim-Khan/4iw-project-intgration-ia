@@ -1,5 +1,5 @@
 "use client"; 
-import {
+import { 
   Accordion,
   AccordionGroup,
   Box,
@@ -28,6 +28,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { URLSearchParams } from "url";
 import { set } from "zod";
 import RecipeCard from "../../components/RecipeCard";
 import useFavoriteStore from "../../../../store/favoriteStore";
@@ -39,6 +40,7 @@ export default function ReceipDetails({
   params: { slug: string };
 }) {
   const detailsRoute = "/api/details";
+  const commentsRoute = "/api/comments";
   const { items, getFavorites } = useFavoriteStore((state) => state)
   const recipeName = decodeURIComponent(params.slug.replace(/-/g, " ")).charAt(0).toUpperCase() + decodeURIComponent(params.slug.replace(/-/g, " ")).slice(1);
   const lowerCaseRecipeName = recipeName.toLowerCase();
@@ -55,40 +57,48 @@ export default function ReceipDetails({
 
   const [recipeRecommandations, setRecipeRecommandations] = useState(null);
   const [recipeRecommandationsLoading, setRecipeRecommandationsLoading] = useState(false);
+  const [comments, setComments] = useState(null);
+
+  const [recipeId, setRecipeId] = useState("");
 
   function getContentShare(ingredients, recipeName) {
-    let content = 'Voici la liste des ingrédients pour la recette ' + recipeName + ' :\n\n';
-    ingredients.forEach(ingredient => {
-      content += '- '+ingredient + '\n';
+    let content =
+      "Voici la liste des ingrédients pour la recette " + recipeName + " :\n\n";
+    ingredients.forEach((ingredient) => {
+      content += "- " + ingredient + "\n";
     });
     return content;
   }
 
   function copyToClipboard(content) {
-      navigator.clipboard.writeText(content).then(function() {
-        
-    }).catch(function(err) {
-        console.error('Erreur lors de la copie dans le presse-papier: ', err);
-    });
+    navigator.clipboard
+      .writeText(content)
+      .then(function () {})
+      .catch(function (err) {
+        console.error("Erreur lors de la copie dans le presse-papier: ", err);
+      });
   }
 
   function sendEmail(subject, body) {
-    let linkEmail = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    let linkEmail = `mailto:?subject=${encodeURIComponent(
+      subject
+    )}&body=${encodeURIComponent(body)}`;
 
     window.open(linkEmail);
   }
 
   function shareSocialMedia(socialMediasChoice, text) {
-    let twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
+    let twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      text
+    )}`;
 
     switch (socialMediasChoice) {
-      case 'twitter':
+      case "twitter":
         window.open(twitterUrl);
         break;
       default:
         break;
-    } 
-
+    }
   }
 
   function getSideDish() {
@@ -110,7 +120,8 @@ export default function ReceipDetails({
       })
       .catch((error) => {
         console.error("Error:", error);
-      }).finally(() => {
+      })
+      .finally(() => {
         setSideDishLoading(false);
       });
   }
@@ -158,6 +169,7 @@ export default function ReceipDetails({
       setDescription(data.recipe.description);
       setIngredients(data.recipe.ingredients);
       setSteps(data.recipe.steps);
+      setRecipeId(data.recipe.id);
       setLoading(false);
       getRecommandationRecipe();
     };
@@ -166,7 +178,32 @@ export default function ReceipDetails({
       .catch((error) => {
         console.error("Error:", error);
       });
+
+    // const getComments = async () => {
+    //   const response = await fetch(commentsRoute + `/?recipeId=${recipeId}`);
+    //   const data = await response.json();
+    //   setComments(data.comments);
+    // };
+    // const commentsResponse = getComments()
+    //   .then((response) => response)
+    //   .catch((error) => {
+    //     console.error("Error:", error);
+    //   });
   }, []);
+
+  useEffect(() => {
+    if (recipeId === "") return;
+    const getComments = async () => {
+      const response = await fetch(commentsRoute + `/?recipeId=${recipeId}`);
+      const data = await response.json();
+      setComments(data.comments);
+    };
+    const commentsResponse = getComments()
+      .then((response) => response)
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, [recipeId]);
 
   return (
     <Box>
@@ -297,6 +334,29 @@ export default function ReceipDetails({
                 </Accordion>
               </AccordionGroup>
 
+              {comments && (
+              <div className="mt-3">
+                <Card>
+                  <CardContent>
+                    <Typography level="h3">Commentaires</Typography>
+                    <List>
+                      {comments.map((comment, index) => (
+                        <ListItem key={index}>
+                          <Card sx={{ width: '100%' }}>
+                            <Typography level="title-lg">
+                              {comment.owner.name}
+                            </Typography>
+                            <Typography level="body-md">
+                              {comment.comment}
+                            </Typography>
+                          </Card>
+                        </ListItem>
+                      ))}
+                    </List>
+                  </CardContent>
+                </Card>
+              </div>
+            )}
             
           </div>
         )}
